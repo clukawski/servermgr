@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <title>Server Manager: {% if server %}{{ server.ip }}{% endif %}</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="container">
+                <nav class="navbar navbar-light bg-light">
+                    <div class="navbar-brand mb-0 h4"><a href="{% url 'index' %}">IMPI Boot Tool</a>: Server {% if server %}{{ server.ip }}{% endif %}</div>
+                </nav>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="jumbotron">
+                            {% if error %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                            {% endif %}
+                            {% if server %}
+                            <form action="" method="POST">{% csrf_token %}
+                                <h4>Send impi commands to the server:</h4>
+                                <p>Please specify the remote servers in a comma separated list</p>
+                                <input class="btn btn-primary" type="submit" name="action" value="Boot">
+                                <input class="btn btn-primary" type="submit" name="action" value="Reboot">
+                                <input class="btn btn-primary" type="submit" name="action" value="Reset">
+                                <input class="btn btn-primary" type="submit" name="action" value="Shutdown">
+                                <input class="btn btn-primary" type="submit" name="action" value="Power Off">
+                            </form>
+                                <hr>
+                                {% if result %}
+                                    <h4>Response:</h4>
+                                    <p>{{ result|linebreaksbr }}</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

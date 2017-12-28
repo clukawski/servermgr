@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <title>Server Manager</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="container">
+                <nav class="navbar navbar-light bg-light">
+                    <div class="navbar-brand mb-0 h4"><a href="{% url 'index' %}">IMPI Boot Tool</a>: Server Manager</div>
+                </nav>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="jumbotron">
+                            {% if result %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ result }}
+                                </div>
+                            {% endif %}
+                            <h4>Add a server</h4>
+                            <form action="" method="POST">{% csrf_token %}
+                                <div class="form-group">
+                                    <label for="username">IPMI Username</label>
+                                    <input type="text" class="form-control" name="username" placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">IPMI Password</label>
+                                    <input type="password" class="form-control" name="password" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ip">IPMI IP Address</label>
+                                    <input type="ip" class="form-control" name="ip" placeholder="IP Address">
+                                </div>
+                                <input class="btn btn-primary" type="submit" name="action" value="Add">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="jumbotron">
+                            {% if server_list %}
+                            <ul>
+                                {% for server in server_list %}
+                                <form method="POST" action="delete/{{ server.id }}/">{% csrf_token %}
+                                    <li>
+                                        <a href="/server/{{ server.id }}/">{{ server.ip }}</a> - <input class="btn btn-primary" type="submit" name="action" value="Delete">
+                                    </li>
+                                </form>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No servers are available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
