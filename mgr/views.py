@@ -25,7 +25,7 @@ def index(request):
             if request.POST['username'].isalnum() and request.POST['username'].isalnum():
                 server = Server(ip=request.POST['ip'], username=request.POST['username'], password=request.POST['password'])
                 server.save()
-                context['result'] = "Server added."+request.POST['username']+request.POST['password']
+                context['result'] = "Server added."
             else:
                 context['error'] = 'Invalid username or password.'
 
