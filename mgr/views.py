@@ -4,6 +4,7 @@ from django.template import loader
 from .models import Server
 from shlex import quote
 import subprocess
+import socket
 
 # Index view (list of servers, add servers, delete servers)
 def index(request):
@@ -15,9 +16,18 @@ def index(request):
 
     if request.method == 'POST':
         if request.POST['action'] == 'Add':
-            server = Server(ip=request.POST['ip'], username=request.POST['username'], password=request.POST['password'])
-            server.save()
-            context['result'] = "Server added."
+            try:
+                socket.inet_aton(request.POST['ip'])
+            except:
+                context['error'] = 'Invalid ip.'
+                return HttpResponse(template.render(context, request))
+
+            if request.POST['username'].isalnum() and request.POST['username'].isalnum():
+                server = Server(ip=request.POST['ip'], username=request.POST['username'], password=request.POST['password'])
+                server.save()
+                context['result'] = "Server added."+request.POST['username']+request.POST['password']
+            else:
+                context['error'] = 'Invalid username or password.'
 
     return HttpResponse(template.render(context, request))
 

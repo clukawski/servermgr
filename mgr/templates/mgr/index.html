@@ -21,6 +21,11 @@
                     </div>
                     <div class="col-sm-5">
                         <div class="jumbotron">
+                            {% if error %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endif %}
                             {% if result %}
                                 <div class="alert alert-success" role="alert">
                                     {{ result }}
