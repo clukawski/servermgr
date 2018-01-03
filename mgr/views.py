@@ -14,19 +14,24 @@ def index(request):
         'server_list': server_list,
     }
 
+    # See if we're adding a server
     if request.method == 'POST':
         if request.POST['action'] == 'Add':
+            # Ip validation
             try:
                 socket.inet_aton(request.POST['ip'])
             except:
                 context['error'] = 'Invalid ip.'
                 return HttpResponse(template.render(context, request))
 
+            # Username/password validation
             if request.POST['username'].isalnum() and request.POST['password'].isalnum():
+                # Save if we're good
                 server = Server(ip=request.POST['ip'], username=request.POST['username'], password=request.POST['password'])
                 server.save()
                 context['result'] = "Server added."
             else:
+                # Invalid username or password
                 context['error'] = 'Invalid username or password.'
 
     return HttpResponse(template.render(context, request))
@@ -36,12 +41,14 @@ def server(request, server_id):
     context = {}
     template = loader.get_template('mgr/server.html')
 
+    # Check if this server exists
     try:
         server = Server.objects.get(id=server_id)
         context['server'] = server
     except:
         context['error'] = "An error has occured. Please check this server exists."
 
+    # Check if we're doing anything to this server
     if request.method == 'POST':
         if request.POST['action'] == 'Status':
             command = 'chassis power status'
@@ -70,6 +77,7 @@ def server(request, server_id):
             context['error'] = "An error has occured. Please check that ipmitool is installed."
             return HttpResponse(template.render(context, request))
 
+        # Otherwise return output on success or failure
         if result.returncode != 0:
             context['error'] = "An error has occured. Please check your settings."
             context['result'] = result.stdout.decode().strip()
@@ -80,11 +88,13 @@ def server(request, server_id):
 
 # Delete the specified server_id
 def delete(request, delete_id):
+    # If it doesn't exist just return to
     try:
         server = Server.objects.get(id=delete_id)
     except:
         return redirect('index')
 
+    # Otherwise delete and go back to the list/main page
     if request.method == 'POST':
         if request.POST['action'] == 'Delete':
             server.delete()
