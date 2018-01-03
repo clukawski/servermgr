@@ -11,7 +11,6 @@ class ViewsTestCase(TestCase):
 
         response = views.index(request)
         
-        print(response)
         server = Server.objects.all()[0]
 
         self.assertEqual(response.status_code, 200)
@@ -46,7 +45,7 @@ class ViewsTestCase(TestCase):
         response = views.index(request)
 
         servers = Server.objects.all()
-        print(response.content.decode("utf-8"))
+
         self.assertEqual(response.status_code, 200)
         self.assertFalse("192.168.1.100" in response.content.decode("utf-8"))
         self.assertFalse(servers)
