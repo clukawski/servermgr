@@ -22,7 +22,7 @@ def index(request):
                 context['error'] = 'Invalid ip.'
                 return HttpResponse(template.render(context, request))
 
-            if request.POST['username'].isalnum() and request.POST['username'].isalnum():
+            if request.POST['username'].isalnum() and request.POST['password'].isalnum():
                 server = Server(ip=request.POST['ip'], username=request.POST['username'], password=request.POST['password'])
                 server.save()
                 context['result'] = "Server added."
