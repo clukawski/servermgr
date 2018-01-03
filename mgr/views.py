@@ -55,8 +55,10 @@ def server(request, server_id):
         try:
             result = subprocess.run(['ipmitool', '-I', 'lan', '-H', ip, '-U', username, '-P', password, command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         except:
-            context['error'] = "An error has occured. Please check your settings and that ipmitool is installed."
-        if result.returncode != 0 and not context['error']:
+            context['error'] = "An error has occured. Please check that ipmitool is installed."
+            return HttpResponse(template.render(context, request))
+
+        if result.returncode != 0:
             context['error'] = "An error has occured. Please check your settings."
             context['result'] = result.stdout.decode().strip()
         else:
