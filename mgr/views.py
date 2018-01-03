@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import Server
+from shlex import quote
 import subprocess
 
 # Index view (list of servers, add servers, delete servers)
@@ -44,9 +45,19 @@ def server(request, server_id):
             command = 'chassis power off'
         else:
             command = ''
-        result = subprocess.run(['ipmitool', '-I', 'lan', '-H', server.ip, '-U', server.username, '-P', server.password, command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        if result.returncode != 0:
+
+        # Quote out our arguments to avoid injecting anything nasty
+        ip = quote(server.ip);
+        username = quote(server.username);
+        password = quote(server.password);
+
+        # subprocess.run() will throw an exception if ipmitool isn't found
+        try:
+            result = subprocess.run(['ipmitool', '-I', 'lan', '-H', ip, '-U', username, '-P', password, command], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except:
             context['error'] = "An error has occured. Please check your settings and that ipmitool is installed."
+        if result.returncode != 0 and not context['error']:
+            context['error'] = "An error has occured. Please check your settings."
             context['result'] = result.stdout.decode().strip()
         else:
             context['result'] = result.stdout.decode().strip()
