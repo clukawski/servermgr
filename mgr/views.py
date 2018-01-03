@@ -43,7 +43,9 @@ def server(request, server_id):
         context['error'] = "An error has occured. Please check this server exists."
 
     if request.method == 'POST':
-        if request.POST['action'] == 'Boot':
+        if request.POST['action'] == 'Status':
+            command = 'chassis power status'
+        elif request.POST['action'] == 'Boot':
             command = 'chassis power on'
         elif request.POST['action'] == 'Reboot':
             command = 'chassis power cycle'

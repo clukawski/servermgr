@@ -29,7 +29,7 @@
                             {% if server %}
                             <form action="" method="POST">{% csrf_token %}
                                 <h4>Send impi commands to the server:</h4>
-                                <p>Please specify the remote servers in a comma separated list</p>
+                                <input class="btn btn-primary" type="submit" name="action" value="Status">
                                 <input class="btn btn-primary" type="submit" name="action" value="Boot">
                                 <input class="btn btn-primary" type="submit" name="action" value="Reboot">
                                 <input class="btn btn-primary" type="submit" name="action" value="Reset">
